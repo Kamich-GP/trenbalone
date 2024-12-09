@@ -14,7 +14,7 @@
         </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="/" class="nav-link px-2 text-secondary">Home</a></li>
+          <li><a href="/" class="nav-link px-2 text-white">Home</a></li>
         </ul>
 
         <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
@@ -50,6 +50,7 @@
     <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
         {% for p in products %}
       <div class="feature col">
+          <img src="{{ p.product_photo.url }}" alt="{{ p }}" width="300" height="300">
         <h2 class="text-white">{{ p.product_name }}</h2>
         <p class="text-white">{{ p.product_des }}</p>
         <a href="/product/{{ p.id }}" class="icon-link">
