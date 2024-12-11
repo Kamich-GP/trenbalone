@@ -17,13 +17,14 @@
           <li><a href="/" class="nav-link px-2 text-white">Home</a></li>
         </ul>
 
-        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-          <input type="search" class="form-control form-control-dark" placeholder="Поиск..." aria-label="Поиск">
+        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" action="/search" method="post">
+            {% csrf_token %}
+          <input name="search" type="search" class="form-control form-control-dark" placeholder="Поиск..." aria-label="Поиск">
         </form>
 
         <div class="text-end">
           <button type="button" class="btn btn-outline-light me-2">Login</button>
-          <button type="button" class="btn btn-warning">Sign-up</button>
+          <button type="button" class="btn btn-warning"><a href="/register" class="text-dark">Регистрация</a></button>
         </div>
       </div>
     </div>

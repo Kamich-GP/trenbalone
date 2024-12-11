@@ -1,5 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Category, Product, Cart
+from .forms import RegForm
+from django.views import View
+from django.contrib.auth import login, logout
+from django.contrib.auth.models import User
 
 
 # Create your views here.
@@ -37,8 +41,50 @@ def product_page(request, pk):
     return render(request, 'product.html', context)
 
 
+# Класс представления (Регистрация)
+class Register(View):
+    template_name = 'registration/register.html'
+
+    # Выдача формы
+    def get(self, request):
+        context = {'form': RegForm}
+        return render(request, self.template_name, context)
 
 
+    # Получение инфы с формы
+    def post(self, request):
+        form = RegForm(request.POST)
+
+        # Если данные корректны
+        if form.is_valid():
+            username = form.clean_username()
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password2')
+
+            # Создаем объект класса User
+            user = User.objects.create_user(username=username,
+                                            email=email,
+                                            password=password)
+            user.save()
+
+            # Авторизуем пользователя
+            login(request, user)
+            return redirect('/')
+        # Если данные некорректны
+        context = {'form': RegForm, 'message': 'Пароль или почта неверны!'}
+        return render(request, self.template_name, context)
+
+
+# Поиск
+def search(request):
+    if request.method == 'POST':
+        get_product = request.POST.get('search')
+
+        if Product.objects.get(product_name__iregex=get_product):
+            searched_product = Product.objects.get(product_name__iregex=get_product)
+            return redirect(f'/product/{searched_product.id}')
+        else:
+            return redirect('/')
 
 
 
