@@ -14,17 +14,24 @@
         </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="/" class="nav-link px-2 text-secondary">Home</a></li>
+          <li><a href="/" class="nav-link px-2 text-white">Home</a></li>
         </ul>
 
-        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-          <input type="search" class="form-control form-control-dark" placeholder="Поиск..." aria-label="Поиск">
+        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" action="/search" method="post">
+            {% csrf_token %}
+          <input name="search" type="search" class="form-control form-control-dark" placeholder="Поиск..." aria-label="Поиск">
         </form>
-
-        <div class="text-end">
-          <button type="button" class="btn btn-outline-light me-2">Login</button>
-          <button type="button" class="btn btn-warning">Sign-up</button>
+        {% if user.is_authenticated %}
+          <div class="text-end">
+          <button type="button" class="btn btn-primary me-2"><a href="/cart" class="text-white text-decoration-none">Корзина</a></button>
+          <button type="button" class="btn btn-primary"><a href="/logout" class="text-white text-decoration-none">Выйти</a></button>
         </div>
+          {% else %}
+        <div class="text-end">
+          <button type="button" class="btn btn-outline-light me-2"><a href="/accounts/login" class="text-white text-decoration-none">Войти</a></button>
+          <button type="button" class="btn btn-warning"><a href="/register" class="text-dark text-decoration-none">Регистрация</a></button>
+        </div>
+          {% endif %}
       </div>
     </div>
   </header>
@@ -39,5 +46,14 @@
 <a href="/category/{{ product.product_category.id }}"><h3>{{ product.product_category }}</h3></a>
 <br>
 <button class="btn btn-secondary">Цена: ${{ product.product_price }}</button>
+{% if user.is_authenticated %}
+<form action="/to-cart/{{ product.id }}" method="post">
+    {% csrf_token %}
+    <input type="number" min="1" name="product_amount" placeholder="Количество товара">
+    <button type="submit" class="btn btn-warning">Добавить в корзину</button>
+</form>
+{% else %}
+<p class="text-white">Войдите в аккаунт, чтобы приобрести товар!</p>
+{% endif %}
 </body>
 </html>
